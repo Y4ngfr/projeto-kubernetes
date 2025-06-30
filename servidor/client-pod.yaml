@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client-pod
+  labels:                   # Def inimos labels para agrupar Pods em conjuntos
+    app: client         # Por exemplo, podemos definir vários Pods com a label app: simple-api (Para podermos selecionálos depois para compor um service)
+spec:
+  containers:
+    - name: client-container
+      image: yangfr10/client-image
+      env:
+        - name: "ipservice"
+          value: "10.96.178.125"
+        - name: "port"
+          value: "8085"
+        - name: "num_messages"
+          value: "10"
+      ports:
+        - containerPort: 8080

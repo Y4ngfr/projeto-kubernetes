@@ -1,0 +1,2 @@
+end_time,client_id,server_ip,server_port,num_messages,tempo_total_segundos,tempo_medio_por_msg,mensagens_enviadas
+2025-06-30T20:24:44-03:00,17399,127.0.0.1,8080,10,0.00254,0.00025,10
