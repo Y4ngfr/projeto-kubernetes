@@ -6,13 +6,14 @@ import csv
 from datetime import datetime
 
 class Metricas:
-    def __init__(self, client_id, num_messages, total_time, server_ip, server_port, mensagens_enviadas):
+    def __init__(self, client_id, num_messages, total_time, server_ip, server_port, mensagens_enviadas, tempo_resposta_server):
         self.client_id = client_id
         self.num_messages = num_messages
         self.total_time = total_time
         self.server_ip = server_ip
         self.server_port = server_port
-        self.mensagens_enviadas = mensagens_enviadas       
+        self.mensagens_enviadas = mensagens_enviadas
+        self.tempo_resposta_server = tempo_resposta_server    # tempo de resposta por mensagem
 
 def main():
     if len(sys.argv) != 5:
@@ -36,37 +37,41 @@ def main():
 
     try:        
         start_time = time.time()
+        server_response_time = 0
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            print("Cliente iniciado - Conectando ao servidor...", flush=True)
-
+            # print("Cliente iniciado - Conectando ao servidor...", flush=True)
             s.connect((SERVER_IP, SERVER_PORT))
 
-            print("Conectado com sucesso - Enviando NUM_MESSAGES...", flush=True)
+            # print("Conectado com sucesso - Enviando NUM_MESSAGES...", flush=True)
             s.sendall(f"{NUM_MESSAGES}".encode('utf-8'))
 
             data_recv = s.recv(1024)
             response = data_recv.decode('utf-8')
 
             if response == "Pronto para iniciar":
-                print("Mensagem de confirmação recebida", flush=True)
+                # print("Mensagem de confirmação recebida", flush=True)
 
                 for i in range(NUM_MESSAGES):
                     msg = f"menssagem para o servidor. Número [{i}]"
                     data = msg.encode('utf-8')
                     s.sendall(data)
+                    start_server_response_time = time.time()
                     confirmacao = s.recv(1024).decode('utf-8')
+                    end_server_response_time = time.time()
+                    server_response_time += end_server_response_time - start_server_response_time
                     if(confirmacao == "ACK"):
                         mensagens_enviadas += 1
                         continue
                     else:
-                        print("Conexão com o servidor perdida", flush=True)
+                        # print("Conexão com o servidor perdida", flush=True)
                         break
             
             end_time = time.time()
             total_time = end_time - start_time
+            server_response_time_medio = server_response_time / i
 
-            print(f"Envio concluído. Total de {NUM_MESSAGES} mensagens em {total_time:.5f} segundos", flush=True)
+            # print(f"Envio concluído. Total de {NUM_MESSAGES} mensagens em {total_time:.5f} segundos", flush=True)
             
     except ConnectionRefusedError:
         print("Erro: Não foi possível conectar ao servidor. Verifique se o servidor está em execução.", flush=True)
@@ -75,7 +80,7 @@ def main():
     except Exception as e:
         print(f"Erro inesperado: {str(e)}", flush=True)
 
-    metricas = Metricas(CLIENT_ID, NUM_MESSAGES, total_time, SERVER_IP, SERVER_PORT, mensagens_enviadas)
+    metricas = Metricas(CLIENT_ID, NUM_MESSAGES, total_time, SERVER_IP, SERVER_PORT, mensagens_enviadas, server_response_time_medio)
     write_to_csv(metricas, SIMULATION_FILENAME)
 
 def write_to_csv(metricas:Metricas, SIMULATION_FILENAME):
@@ -97,7 +102,9 @@ def write_to_csv(metricas:Metricas, SIMULATION_FILENAME):
             'num_messages',
             'tempo_total_segundos',
             'tempo_medio_por_msg',
-            'mensagens_enviadas'
+            'mensagens_enviadas',
+            'Throughput',
+            'tempo_medio_resposta_servidor'
         ]
 
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -112,8 +119,10 @@ def write_to_csv(metricas:Metricas, SIMULATION_FILENAME):
             'server_port': metricas.server_port,
             'num_messages': metricas.num_messages,
             'tempo_total_segundos': metricas.total_time,
-            'tempo_medio_por_msg': metricas.total_time / metricas.num_messages if metricas.num_messages > 0 else 0,
-            'mensagens_enviadas': metricas.mensagens_enviadas
+            'tempo_medio_por_msg': metricas.total_time / metricas.num_messages, # latência media por mensagem
+            'mensagens_enviadas': metricas.mensagens_enviadas,
+            'Throughput': metricas.num_messages / metricas.total_time, # mensagens / segundo
+            'tempo_medio_resposta_servidor': metricas.tempo_resposta_server
         }) 
 
 if __name__ == '__main__':

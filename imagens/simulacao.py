@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 def run_client(client_id, server_ip, port, num_msgs, filename):
     """Função que executa um cliente como subprocesso"""
     cmd = f"python3 client/client.py {server_ip} {port} {num_msgs} {filename}"
+    # cmd = f"./client/client {server_ip} {port} {num_msgs} {filename}"
     print(f"[Cliente {client_id}] Iniciando...")
     subprocess.run(cmd, shell=True, check=True)
 

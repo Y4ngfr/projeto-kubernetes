@@ -13,12 +13,14 @@ import (
 )
 
 type Metricas struct {
-	ClientID         int
-	NumMessages      int
-	TotalTime        float64
-	ServerIP         string
-	ServerPort       int
-	MensagensEnviadas int
+	ClientID               int
+	NumMessages            int
+	TotalTime              float64
+	ServerIP               string
+	ServerPort             int
+	MensagensEnviadas      int
+	TempoRespostaServer    float64 // Novo campo
+	Throughput             float64 // Novo campo
 }
 
 func main() {
@@ -44,6 +46,7 @@ func main() {
 	clientID := os.Getpid()
 	mensagensEnviadas := 0
 	var totalTime float64
+	var tempoRespostaTotal float64 // Acumula o tempo total de resposta do servidor
 
 	// Configurar tratamento de sinais para encerramento limpo
 	sigChan := make(chan os.Signal, 1)
@@ -89,6 +92,9 @@ func main() {
 
 			for i := 0; i < numMessages; i++ {
 				msg := fmt.Sprintf("mensagem para o servidor. Número [%d]\n", i)
+				
+				// Medir tempo de resposta do servidor
+				startResponseTime := time.Now()
 				_, err := conn.Write([]byte(msg))
 				if err != nil {
 					fmt.Printf("Conexão com o servidor perdida: %v\n", err)
@@ -101,6 +107,8 @@ func main() {
 					fmt.Printf("Erro na confirmação: %v\n", err)
 					break
 				}
+				responseTime := time.Since(startResponseTime).Seconds()
+				tempoRespostaTotal += responseTime
 				mensagensEnviadas++
 			}
 		}
@@ -117,13 +125,26 @@ func main() {
 		// Continua normalmente
 	}
 
+	// Calcular métricas adicionais
+	tempoRespostaMedio := 0.0
+	if mensagensEnviadas > 0 {
+		tempoRespostaMedio = tempoRespostaTotal / float64(mensagensEnviadas)
+	}
+
+	throughput := 0.0
+	if totalTime > 0 {
+		throughput = float64(mensagensEnviadas) / totalTime
+	}
+
 	metricas := Metricas{
-		ClientID:         clientID,
-		NumMessages:      numMessages,
-		TotalTime:        totalTime,
-		ServerIP:         serverIP,
-		ServerPort:       serverPort,
-		MensagensEnviadas: mensagensEnviadas,
+		ClientID:            clientID,
+		NumMessages:         numMessages,
+		TotalTime:           totalTime,
+		ServerIP:            serverIP,
+		ServerPort:          serverPort,
+		MensagensEnviadas:   mensagensEnviadas,
+		TempoRespostaServer: tempoRespostaMedio,
+		Throughput:          throughput,
 	}
 
 	writeToCSV(metricas, simulationFilename)
@@ -138,6 +159,9 @@ func writeToCSV(metricas Metricas, simulationFilename string) {
 	} else {
 		filename = simulationFilename
 	}
+
+	// Criar diretório se não existir
+	os.MkdirAll("client/registros", os.ModePerm)
 
 	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -165,13 +189,15 @@ func writeToCSV(metricas Metricas, simulationFilename string) {
 			"tempo_total_segundos",
 			"tempo_medio_por_msg",
 			"mensagens_enviadas",
+			"Throughput",
+			"tempo_medio_resposta_servidor",
 		}
 		writer.Write(headers)
 	}
 
-	tempoMedio := 0.0
+	tempoMedioPorMsg := 0.0
 	if metricas.NumMessages > 0 {
-		tempoMedio = metricas.TotalTime / float64(metricas.NumMessages)
+		tempoMedioPorMsg = metricas.TotalTime / float64(metricas.NumMessages)
 	}
 
 	record := []string{
@@ -181,8 +207,10 @@ func writeToCSV(metricas Metricas, simulationFilename string) {
 		strconv.Itoa(metricas.ServerPort),
 		strconv.Itoa(metricas.NumMessages),
 		strconv.FormatFloat(metricas.TotalTime, 'f', 5, 64),
-		strconv.FormatFloat(tempoMedio, 'f', 5, 64),
+		strconv.FormatFloat(tempoMedioPorMsg, 'f', 5, 64),
 		strconv.Itoa(metricas.MensagensEnviadas),
+		strconv.FormatFloat(metricas.Throughput, 'f', 5, 64),
+		strconv.FormatFloat(metricas.TempoRespostaServer, 'f', 5, 64),
 	}
 
 	writer.Write(record)

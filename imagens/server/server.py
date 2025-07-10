@@ -10,7 +10,7 @@ server_running.set()
 def handle_client(conn: socket.socket, addr):
     """Lida com a conexão de um cliente"""
     try:
-        print(f"Conexão estabelecida com {addr}", flush=True)
+        # print(f"Conexão estabelecida com {addr}", flush=True)
         
         # Receber número de mensagens esperadas
         num_messages = int(conn.recv(1024).decode('utf-8'))
@@ -22,8 +22,8 @@ def handle_client(conn: socket.socket, addr):
                 if not data:  # Conexão fechada pelo cliente
                     break
 
-                msg = data.decode('utf-8')
-                print(f"Recebido de {addr}: {msg}", flush=True)
+                # msg = data.decode('utf-8')
+                # print(f"Recebido de {addr}: {msg}", flush=True)
                 conn.sendall(b"ACK")
                 
             except (ConnectionResetError, UnicodeDecodeError) as e:
@@ -34,11 +34,11 @@ def handle_client(conn: socket.socket, addr):
         print(f"Erro no handler do cliente {addr}: {str(e)}", flush=True)
     finally:
         conn.close()
-        print(f"Conexão com {addr} fechada", flush=True)
+        # print(f"Conexão com {addr} fechada", flush=True)
 
 def shutdown_server(signum, frame):
     """Encerra o servidor de forma limpa"""
-    print(f"\nRecebido sinal {signum}, encerrando servidor...", flush=True)
+    # print(f"\nRecebido sinal {signum}, encerrando servidor...", flush=True)
     server_running.clear()
 
 def start_server(host='0.0.0.0', port=8080):
@@ -47,7 +47,7 @@ def start_server(host='0.0.0.0', port=8080):
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((host, port))
         s.listen()
-        print(f"Servidor ouvindo em {host}:{port}", flush=True)
+        # print(f"Servidor ouvindo em {host}:{port}", flush=True)
         
         # Configurar timeout menor para resposta mais rápida a sinais
         s.settimeout(0.1)
