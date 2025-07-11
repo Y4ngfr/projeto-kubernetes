@@ -25,9 +25,15 @@ Foram escolhidas as seguintes métricas:
 
 ### Métrica: Tempo Médio Por Cliente
 
-<div style="display: flex; gap: 10px;">
-  <img src="imagens/figuras/Python/3d_tempo_medio_cliente_view1.png" alt="Descrição 1" width="300"/>
-  <img src="imagens/figuras/Go/3d_tempo_medio_cliente_view1.png" alt="Descrição 2" width="300"/>
+<div style="display: flex; justify-content: space-between;">
+  <figure>
+    <img src="imagens/figuras/Python/3d_tempo_medio_cliente_view1.png" alt="Descrição 1"/>
+    <figcaption>Python</figcaption>
+  </figure>
+  <figure>
+    <img src="imagens/figuras/Go/3d_tempo_medio_cliente_view1.png" alt="Descrição 2"/>
+    <figcaption>Go</figcaption>
+  </figure>
 </div>
 
 #### Python
