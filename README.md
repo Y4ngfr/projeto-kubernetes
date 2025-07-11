@@ -79,6 +79,10 @@ Foram escolhidas as seguintes métricas:
 ![go tempo resposta view 2](./imagens/figuras/Go/3d_tempo_resposta_servidor_view2.png)
 ![go tempo resposta view 3](./imagens/figuras/Go/3d_tempo_resposta_servidor_view3.png)
 
+## Dados Tratados
+
+{% include ./imagens/superficies_otimizadas/Python/tempo_medio_por_cliente_suavizada.html %}
+
 ---------------------------
 
 Justificar os resultados (faz sentido a diferença de tempo que o python está tendo?)
