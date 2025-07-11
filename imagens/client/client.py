@@ -25,9 +25,6 @@ def main():
         SERVER_PORT = int(sys.argv[2])
         NUM_MESSAGES = int(sys.argv[3])
         SIMULATION_FILENAME = sys.argv[4]
-        # SERVER_IP = os.getenv('ipservice', '10.96.178.125')
-        # SERVER_PORT = int(os.getenv('port', '8085'))
-        # NUM_MESSAGES = int(os.getenv('num_messages', '10'))
     except ValueError:
         print("PORT, NUM_MESSAGES e SET_ARQUIVO devem ser números inteiros", flush=True)
         exit(1)

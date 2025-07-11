@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import csv
+import time
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -101,13 +102,13 @@ def plot_ultra_smooth_surface(df, column, title):
     )
     
     # Salvar com metadados
-    os.makedirs('superficies_otimizadas/Python', exist_ok=True)
+    os.makedirs('superficies_otimizadas/Go', exist_ok=True)
     fig.write_html(
-        f"superficies_otimizadas/Python/{column}_suavizada.html",
+        f"superficies_otimizadas/Go/{column}_suavizada.html",
         include_plotlyjs='cdn',
         config={'responsive': True}
     )
-    print(f"Gráfico otimizado salvo em: superficies_otimizadas/Python/{column}_suavizada.html")
+    print(f"Gráfico otimizado salvo em: superficies_otimizadas/Go/{column}_suavizada.html")
 
 if len(sys.argv) != 2:
     print("Entre com filename")
@@ -136,12 +137,15 @@ with open(filename, 'a', newline='') as csvfile:
 
     for j in range(1, 12):
         subprocess.run(['kubectl', 'scale', 'deployment', 'server-deployment', f"--replicas={str(j)}"])
+        # subprocess.run(['kubectl', 'wait', '--for=condition=Ready', 'pods', '-l', 'app=server', '--timeout=300s'])
+        # time.sleep(5)
+
         for i in range(1, 101):
             num_msgs = 5
-            resultado = subprocess.run(['python3', 'simulacao.py', str(i), str(num_msgs), 'client/registros/output_data_1.csv'], 
+            resultado = subprocess.run(['python3', 'simulacao.py', str(i), str(num_msgs), 'client/registros/output_data_4.csv'], 
                                     check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             
-            df = pd.read_csv('client/registros/output_data_1.csv')
+            df = pd.read_csv('client/registros/output_data_4.csv')
             tempo_total = df['tempo_total_segundos'].tail(i).sum()
             tempo_medio_por_msg = df['tempo_medio_por_msg'].tail(i).sum() / i
             throughput_medio = df['Throughput'].tail(i).sum() / i
@@ -195,8 +199,8 @@ with open(filename, 'a', newline='') as csvfile:
             plt.tight_layout()
             
             # Criar diretório se não existir
-            os.makedirs(os.path.dirname(f"figuras/Python/{filename_prefix}"), exist_ok=True)
-            plt.savefig(f"figuras/Python/{filename_prefix}_{view['suffix']}.png", dpi=300, bbox_inches='tight')
+            os.makedirs(os.path.dirname(f"figuras/Go/{filename_prefix}"), exist_ok=True)
+            plt.savefig(f"figuras/Go/{filename_prefix}_{view['suffix']}.png", dpi=300, bbox_inches='tight')
             plt.close()
 
     # Configurações de visualização

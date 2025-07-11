@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: server-pod
-          image: yangfr10/server-image
+          image: yangfr10/server-image-go
           ports:
             - containerPort: 8080

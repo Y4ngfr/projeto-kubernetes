@@ -5,9 +5,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 def run_client(client_id, server_ip, port, num_msgs, filename):
     """Função que executa um cliente como subprocesso"""
-    cmd = f"python3 client/client.py {server_ip} {port} {num_msgs} {filename}"
-    # cmd = f"./client/client {server_ip} {port} {num_msgs} {filename}"
-    print(f"[Cliente {client_id}] Iniciando...")
+    # cmd = f"python3 client/client.py {server_ip} {port} {num_msgs} {filename}"
+    cmd = f"./client/client {server_ip} {port} {num_msgs} {filename}"
+    #print(f"[Cliente {client_id}] Iniciando...")
     subprocess.run(cmd, shell=True, check=True)
 
 if __name__ == "__main__":
@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     SIMULATION_FILENAME = sys.argv[3]
 
-    print(f"🔥 Iniciando {NUM_CLIENTS} clientes SIMULTANEAMENTE...")
+    #print(f"🔥 Iniciando {NUM_CLIENTS} clientes SIMULTANEAMENTE...")
     start_time = time.time()
 
     # Usando ThreadPool para lançar todos os subprocessos de uma vez
@@ -39,4 +39,4 @@ if __name__ == "__main__":
             for i in range(NUM_CLIENTS)
         ]
 
-    print(f"✅ Todos os clientes terminaram em {time.time() - start_time:.5f}s")
+    #print(f"✅ Todos os clientes terminaram em {time.time() - start_time:.5f}s")

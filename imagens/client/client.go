@@ -66,7 +66,7 @@ func main() {
 		}
 		defer conn.Close()
 
-		fmt.Println("Cliente iniciado - Conectando ao servidor...")
+		// fmt.Println("Cliente iniciado - Conectando ao servidor...")
 
 		// Enviar número de mensagens
 		_, err = conn.Write([]byte(fmt.Sprintf("%d\n", numMessages)))
@@ -76,7 +76,7 @@ func main() {
 			return
 		}
 
-		fmt.Println("Conectado com sucesso - Enviando NUM_MESSAGES...")
+		// fmt.Println("Conectado com sucesso - Enviando NUM_MESSAGES...")
 
 		// Ler confirmação do servidor
 		reader := bufio.NewReader(conn)
@@ -88,7 +88,7 @@ func main() {
 		}
 
 		if response == "Pronto para iniciar\n" {
-			fmt.Println("Mensagem de confirmação recebida")
+			//fmt.Println("Mensagem de confirmação recebida")
 
 			for i := 0; i < numMessages; i++ {
 				msg := fmt.Sprintf("mensagem para o servidor. Número [%d]\n", i)
@@ -97,14 +97,14 @@ func main() {
 				startResponseTime := time.Now()
 				_, err := conn.Write([]byte(msg))
 				if err != nil {
-					fmt.Printf("Conexão com o servidor perdida: %v\n", err)
+					//fmt.Printf("Conexão com o servidor perdida: %v\n", err)
 					break
 				}
 
 				// Esperar ACK
 				ack, err := reader.ReadString('\n')
 				if err != nil || ack != "ACK\n" {
-					fmt.Printf("Erro na confirmação: %v\n", err)
+					//fmt.Printf("Erro na confirmação: %v\n", err)
 					break
 				}
 				responseTime := time.Since(startResponseTime).Seconds()
@@ -114,7 +114,7 @@ func main() {
 		}
 
 		totalTime = time.Since(startTime).Seconds()
-		fmt.Printf("Envio concluído. Total de %d mensagens em %.5f segundos\n", numMessages, totalTime)
+		//fmt.Printf("Envio concluído. Total de %d mensagens em %.5f segundos\n", numMessages, totalTime)
 		done <- true
 	}()
 
