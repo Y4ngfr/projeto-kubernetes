@@ -25,17 +25,6 @@ Foram escolhidas as seguintes métricas:
 
 ### Métrica: Tempo Médio Por Cliente
 
-<div style="display: flex; justify-content: space-between;">
-  <figure>
-    <img src="imagens/figuras/Python/3d_tempo_medio_cliente_view1.png" alt="Descrição 1"/>
-    <figcaption>Python</figcaption>
-  </figure>
-  <figure>
-    <img src="imagens/figuras/Go/3d_tempo_medio_cliente_view1.png" alt="Descrição 2"/>
-    <figcaption>Go</figcaption>
-  </figure>
-</div>
-
 #### Python
 
 ![py tempo medio por cliente view 1](./imagens/figuras/Python/3d_tempo_medio_cliente_view1.png)
@@ -90,12 +79,47 @@ Foram escolhidas as seguintes métricas:
 ![go tempo resposta view 2](./imagens/figuras/Go/3d_tempo_resposta_servidor_view2.png)
 ![go tempo resposta view 3](./imagens/figuras/Go/3d_tempo_resposta_servidor_view3.png)
 
-## Dados Tratados
+## Dados Tratados (Comparação)
+
+<div style="display: flex; justify-content: space-between; gap: 10px; width: 100%;">
+  <img src="tempo%20por%20cliente%20python.jpg" alt="Descrição 1" style="width: calc(50% - 5px);"/>
+  <img src="tempo%20por%20cliente%20go.jpg" alt="Descrição 2" style="width: calc(50% - 5px);"/>
+</div>
+
+<br>
+
+<div style="display: flex; justify-content: space-between; gap: 10px; width: 100%;">
+  <img src="tempo%20por%20mensagem%20python.jpg" alt="Descrição 1" style="width: calc(50% - 5px);"/>
+  <img src="tempo%20por%20mensagem%20go.jpg" alt="Descrição 2" style="width: calc(50% - 5px);"/>
+</div>
+
+<br>
+
+<div style="display: flex; justify-content: space-between; gap: 10px; width: 100%;">
+  <img src="tempo%20resposta%20servidor%20python.jpg" alt="Descrição 1" style="width: calc(50% - 5px);"/>
+  <img src="tempo%20resposta%20servidor%20go.jpg" alt="Descrição 2" style="width: calc(50% - 5px);"/>
+</div>
+
+<br>
+
+<div style="display: flex; justify-content: space-between; gap: 10px; width: 100%;">
+  <img src="tempo%20total%20python.jpg" alt="Descrição 1" style="width: calc(50% - 5px);"/>
+  <img src="tempo%20total%20go.jpg" alt="Descrição 2" style="width: calc(50% - 5px);"/>
+</div>
+
+<br>
+
+<div style="display: flex; justify-content: space-between; gap: 10px; width: 100%;">
+  <img src="throughput%20python.jpg" alt="Descrição 1" style="width: calc(50% - 5px);"/>
+  <img src="./throughput%20go.jpg" alt="Descrição 2" style="width: calc(50% - 5px);"/>
+</div>
+
+
+
 
 ---------------------------
 
 Justificar os resultados (faz sentido a diferença de tempo que o python está tendo?)
 Colocar a média de 5 execuções
-Por que o python está caindo o tempo?
 
 10 min e 5 min
